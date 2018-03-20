@@ -17,7 +17,7 @@ class AbstractTableViewController: UIViewController, UITableViewDelegate, UITabl
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		self.navigationItem.title = "nusic"
+		self.navigationItem.title = getTitle()
 		
 		_BtnLeft = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(AbstractTableViewController.goBack))
 		self.navigationItem.leftBarButtonItem = nil
@@ -25,17 +25,27 @@ class AbstractTableViewController: UIViewController, UITableViewDelegate, UITabl
 		let btnRight = UIBarButtonItem(title: "More", style: UIBarButtonItemStyle.plain, target: self, action: #selector(AbstractTableViewController.goMore))
 		self.navigationItem.rightBarButtonItem = btnRight
 		
-		_TableView = UITableView()
-		_TableView?.frame = CGRect(
-			x: 0,
-			y: 0,
-			width: self.view.frame.width,
-			height: self.view.frame.height
-		)
-		_TableView?.register(UINib(nibName: getNameNib(), bundle: nil), forCellReuseIdentifier: getIdentifierCell())
-		_TableView?.delegate = self
-		_TableView?.dataSource = self
-		self.view.addSubview(_TableView)
+		if haveItem() {
+			_TableView = UITableView()
+			_TableView?.frame = CGRect(
+				x: 0,
+				y: 0,
+				width: self.view.frame.width,
+				height: self.view.frame.height
+			)
+			_TableView?.register(UINib(nibName: getNameNib(), bundle: nil), forCellReuseIdentifier: getIdentifierCell())
+			_TableView?.delegate = self
+			_TableView?.dataSource = self
+			self.view.addSubview(_TableView)
+		}
+		else {
+			let label = UILabel()
+			label.text = getStringNothing()
+			label.font = UIFont.boldSystemFont(ofSize: 30)
+			label.sizeToFit()
+			label.center = self.view.center
+			self.view.addSubview(label)
+		}
 	}
 	
 	override func didReceiveMemoryWarning() {
@@ -43,6 +53,18 @@ class AbstractTableViewController: UIViewController, UITableViewDelegate, UITabl
 	}
 	
 	// >>> Abstract
+	func getTitle() -> String {
+		return ""
+	}
+	
+	func haveItem() -> Bool {
+		return false
+	}
+	
+	func getStringNothing() -> String {
+		return ""
+	}
+	
 	func getNameNib() -> String {
 		return ""
 	}
@@ -65,10 +87,12 @@ class AbstractTableViewController: UIViewController, UITableViewDelegate, UITabl
 	
 	func setDataCell(cell: inout UITableViewCell, indexPath: IndexPath) {}
 	
-	func onSelect(indexPath: IndexPath) {}
+	func onSelect(indexPath: IndexPath) -> UIViewController? {
+		return nil
+	}
 	// <<< Abstract
 	
-	func setBtnLeft() {
+	func resetBtnLeft() {
 		self.navigationItem.leftBarButtonItem = _Back ? _BtnLeft : nil
 	}
 	
@@ -76,7 +100,14 @@ class AbstractTableViewController: UIViewController, UITableViewDelegate, UITabl
 		self.navigationController?.popViewController(animated: true)
 	}
 	
-	func goMore() {
+	func goNext(vcNext: UIViewController) {
+		self.navigationController?.pushViewController(vcNext, animated: true)
+	}
+	
+	@objc func goMore() {
+		let vcNext = UINavigationController(rootViewController: MoreViewController())
+		vcNext.modalTransitionStyle = .crossDissolve
+		self.present(vcNext, animated: true, completion: nil)
 	}
 	
 	// セクション数
@@ -104,7 +135,16 @@ class AbstractTableViewController: UIViewController, UITableViewDelegate, UITabl
 	// セル選択
 	func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
-		onSelect(indexPath: indexPath)
+		
+		let vcNext = onSelect(indexPath: indexPath)
+		if vcNext is AbstractTableViewController {
+			goNext(vcNext: vcNext!)
+		}
+		else if vcNext != nil {
+			// UIViewController
+			vcNext!.modalTransitionStyle = .coverVertical
+			self.present(vcNext!, animated: true, completion: nil)
+		}
 	}
 	
 }

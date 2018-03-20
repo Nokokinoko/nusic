@@ -8,40 +8,59 @@
 
 import UIKit
 
-class TabViewController: UITabBarController {
+class TabViewController: UITabBarController, UITabBarControllerDelegate {
 	
-	enum Tag: Int {
-		case tagPlayList
-		case tagArtist
-		case tagAlbum
-		case tagSong
+	private enum TAG: Int {
+		case PLAY_LIST
+		case ARTIST
+		case ALBUM
+		case SONG
+		case PLAY
 	}
 	
-	private var naviPlayList: UINavigationController!
-	private var naviArtist: UINavigationController!
-	private var naviAlbum: UINavigationController!
-	private var naviSong: UINavigationController!
+	class DummyViewController: UIViewController {}
+	
+	private var _NaviPlayList: UINavigationController!
+	private var _NaviArtist: UINavigationController!
+	private var _NaviAlbum: UINavigationController!
+	private var _NaviSong: UINavigationController!
+	private var _NaviPlay: DummyViewController!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
 		self.view.backgroundColor = UIColor.white
 		
-		naviPlayList = UINavigationController(rootViewController: PlayListTableViewController())
-		naviArtist = UINavigationController(rootViewController: ArtistTableViewController())
-		naviAlbum = UINavigationController(rootViewController: AlbumTableViewController())
-		naviSong = UINavigationController(rootViewController: SongTableViewController())
+		_NaviPlayList = UINavigationController(rootViewController: PlayListTableViewController())
+		_NaviArtist = UINavigationController(rootViewController: ArtistTableViewController())
+		_NaviAlbum = UINavigationController(rootViewController: AlbumTableViewController())
+		_NaviSong = UINavigationController(rootViewController: SongTableViewController())
+		_NaviPlay = DummyViewController()
 		
-		naviPlayList.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: Tag.tagPlayList.rawValue)
-		naviArtist.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: Tag.tagArtist.rawValue)
-		naviAlbum.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: Tag.tagAlbum.rawValue)
-		naviSong.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: Tag.tagSong.rawValue)
+		_NaviPlayList.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: TAG.PLAY_LIST.rawValue)
+		_NaviArtist.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: TAG.ARTIST.rawValue)
+		_NaviAlbum.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: TAG.ALBUM.rawValue)
+		_NaviSong.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: TAG.SONG.rawValue)
+		_NaviPlay.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: TAG.PLAY.rawValue)
 		
-		self.setViewControllers([naviPlayList!, naviArtist!, naviAlbum!, naviSong!], animated: false)
+		self.setViewControllers([_NaviPlayList!, _NaviArtist!, _NaviAlbum!, _NaviSong!, _NaviPlay!], animated: false)
+		self.delegate = self
 	}
 	
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
+	}
+	
+	func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+		if viewController is DummyViewController {
+			if let current = self.selectedViewController {
+				let vcPlay = PlayViewController()
+				vcPlay.modalTransitionStyle = .coverVertical
+				current.present(vcPlay, animated: true, completion: nil)
+			}
+			return false
+		}
+		return true
 	}
 	
 }

@@ -14,6 +14,20 @@ class PlayListTableViewController: AbstractTableViewController {
 	private let myAndroidItems: NSArray = ["5.x", "4.x", "2.x", "1.x"]
 	private let mySections: NSArray = ["iPhone", "Android"]
 	
+	override func getTitle() -> String {
+		// TODO: hit
+		return "PlayList / 0 Hit"
+	}
+	
+	override func haveItem() -> Bool {
+		// TODO: have item
+		return false
+	}
+	
+	override func getStringNothing() -> String {
+		return "I have not PlayList :("
+	}
+	
 	override func getNameNib() -> String {
 		return "PlayListTableViewCell"
 	}
@@ -49,7 +63,10 @@ class PlayListTableViewController: AbstractTableViewController {
 		}
 	}
 	
-	override func onSelect(indexPath: IndexPath) {
+	override func onSelect(indexPath: IndexPath) -> UIViewController? {
+		let vcSong = SongTableViewController()
+		vcSong.callFromPlayList(filter: "")
+		return vcSong
 	}
 	
 }
