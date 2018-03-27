@@ -47,12 +47,7 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 		self.navigationItem.rightBarButtonItem = btnRight
 		
 		_TableView = UITableView()
-		_TableView?.frame = CGRect(
-			x: 0,
-			y: 0,
-			width: self.view.frame.width,
-			height: self.view.frame.height
-		)
+		_TableView?.frame = self.view.frame
 		_TableView?.delegate = self
 		_TableView?.dataSource = self
 		self.view.addSubview(_TableView)

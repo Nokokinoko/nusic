@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MediaPlayer
 
 class SongTableViewController: AbstractTableViewController {
 	
@@ -19,14 +20,10 @@ class SongTableViewController: AbstractTableViewController {
 	private var _CallFrom: CALL_FROM = CALL_FROM.NONE
 	private var _Filter: String?
 	
-	private let myiPhoneItems: NSArray = ["iOS8", "iOS7", "iOS6", "iOS5", "iOS4"]
-	private let myAndroidItems: NSArray = ["5.x", "4.x", "2.x", "1.x"]
-	private let mySections: NSArray = ["iPhone", "Android"]
-	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		_Back = (_CallFrom != CALL_FROM.NONE)
+		_HaveBack = (_CallFrom != CALL_FROM.NONE)
 		resetBtnLeft()
 	}
 	
@@ -47,53 +44,21 @@ class SongTableViewController: AbstractTableViewController {
 	}
 	// <<< Call
 	
-	override func getTitle() -> String {
-		// TODO: hit
-		return "Song / 0 Hit"
+	override func getName() -> String {
+		return "Song"
 	}
 	
-	override func haveItem() -> Bool {
-		// TODO: have item
-		return false
+	override func getMediaQuery() -> MPMediaQuery? {
+		let query = MPMediaQuery.songs()
+		query.addFilterPredicate(MPMediaPropertyPredicate(value: false, forProperty: MPMediaItemPropertyIsCloudItem))
+		return query
 	}
 	
-	override func getStringNothing() -> String {
-		return "I have not Song :("
-	}
-	
-	override func getNameNib() -> String {
-		return "SongTableViewCell"
-	}
-	
-	override func getIdentifierCell() -> String {
-		return "SongTableViewCell"
-	}
-	
-	override func getCountSection() -> Int {
-		return mySections.count
-	}
-	
-	override func getNameSection(section: Int) -> String {
-		return mySections[section] as! String
-	}
-	
-	override func getCountCellBySection(section: Int) -> Int {
-		if section == 0 {
-			return myiPhoneItems.count
-		}
-		else if section == 1 {
-			return myAndroidItems.count
-		}
-		return 0
-	}
-	
-	override func setDataCell(cell: inout UITableViewCell, indexPath: IndexPath) {
-		if indexPath.section == 0 {
-			cell.textLabel?.text = "\(myiPhoneItems[indexPath.row])"
-		}
-		else if indexPath.section == 1 {
-			cell.textLabel?.text = "\(myAndroidItems[indexPath.row])"
-		}
+	override func setDataCell(cell: inout UITableViewCell, item: MPMediaItem) {
+		let artwork = item.artwork
+		cell.imageView?.image = artwork?.image(at: (cell.imageView?.bounds.size)!)
+		cell.textLabel?.text = item.value(forProperty: MPMediaItemPropertyTitle) as? String
+		cell.detailTextLabel?.text = item.value(forProperty: MPMediaItemPropertyArtist) as? String
 	}
 	
 	override func onSelect(indexPath: IndexPath) -> UIViewController? {

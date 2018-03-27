@@ -7,17 +7,28 @@
 //
 
 import UIKit
+import MediaPlayer
 
 class AbstractTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 	
-	internal var _Back: Bool = false
+	internal var _HaveBack: Bool = false
 	private var _BtnLeft: UIBarButtonItem!
 	internal var _TableView: UITableView!
+	
+	private var _Collection: [MPMediaItemCollection]!
+	private var _CollectionSection: [MPMediaQuerySection]!
+	
+	private let SUFFIX_CELL = "TableViewCell"
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		self.navigationItem.title = getTitle()
+		let query = getMediaQuery()
+		_Collection = query?.collections
+		_CollectionSection = query?.collectionSections
+		
+		let count = (_Collection != nil) ? _Collection.count : 0
+		self.navigationItem.title = getName() + " / " + count.description + " Hit"
 		
 		_BtnLeft = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(AbstractTableViewController.goBack))
 		self.navigationItem.leftBarButtonItem = nil
@@ -25,22 +36,17 @@ class AbstractTableViewController: UIViewController, UITableViewDelegate, UITabl
 		let btnRight = UIBarButtonItem(title: "More", style: UIBarButtonItemStyle.plain, target: self, action: #selector(AbstractTableViewController.goMore))
 		self.navigationItem.rightBarButtonItem = btnRight
 		
-		if haveItem() {
+		if 0 < count {
 			_TableView = UITableView()
-			_TableView?.frame = CGRect(
-				x: 0,
-				y: 0,
-				width: self.view.frame.width,
-				height: self.view.frame.height
-			)
-			_TableView?.register(UINib(nibName: getNameNib(), bundle: nil), forCellReuseIdentifier: getIdentifierCell())
+			_TableView?.frame = self.view.frame
+			_TableView?.register(UINib(nibName: getNameCell(), bundle: nil), forCellReuseIdentifier: getNameCell())
 			_TableView?.delegate = self
 			_TableView?.dataSource = self
 			self.view.addSubview(_TableView)
 		}
 		else {
 			let label = UILabel()
-			label.text = getStringNothing()
+			label.text = "I have not " + getName() + " :("
 			label.font = UIFont.boldSystemFont(ofSize: 30)
 			label.sizeToFit()
 			label.center = self.view.center
@@ -53,47 +59,27 @@ class AbstractTableViewController: UIViewController, UITableViewDelegate, UITabl
 	}
 	
 	// >>> Abstract
-	func getTitle() -> String {
+	func getName() -> String {
 		return ""
 	}
 	
-	func haveItem() -> Bool {
-		return false
+	func getMediaQuery() -> MPMediaQuery? {
+		return nil
 	}
 	
-	func getStringNothing() -> String {
-		return ""
-	}
-	
-	func getNameNib() -> String {
-		return ""
-	}
-	
-	func getIdentifierCell() -> String {
-		return ""
-	}
-	
-	func getCountSection() -> Int {
-		return 0
-	}
-	
-	func getNameSection(section: Int) -> String {
-		return ""
-	}
-	
-	func getCountCellBySection(section: Int) -> Int {
-		return 0
-	}
-	
-	func setDataCell(cell: inout UITableViewCell, indexPath: IndexPath) {}
+	func setDataCell(cell: inout UITableViewCell, item: MPMediaItem) {}
 	
 	func onSelect(indexPath: IndexPath) -> UIViewController? {
 		return nil
 	}
 	// <<< Abstract
 	
+	func getNameCell() -> String {
+		return getName() + SUFFIX_CELL
+	}
+	
 	func resetBtnLeft() {
-		self.navigationItem.leftBarButtonItem = _Back ? _BtnLeft : nil
+		self.navigationItem.leftBarButtonItem = _HaveBack ? _BtnLeft : nil
 	}
 	
 	@objc func goBack() {
@@ -112,23 +98,26 @@ class AbstractTableViewController: UIViewController, UITableViewDelegate, UITabl
 	
 	// セクション数
 	func numberOfSections(in tableView: UITableView) -> Int {
-		return getCountSection()
+		return _CollectionSection.count
 	}
 	
 	// セクション名
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		return getNameSection(section: section)
+		return _CollectionSection[section].title
 	}
 	
 	// セクション単位のデータ数
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return getCountCellBySection(section: section)
+		return _CollectionSection[section].range.length
 	}
 	
 	// セルデータを返す
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		var cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: getIdentifierCell(), for: indexPath)
-		setDataCell(cell: &cell, indexPath: indexPath)
+		var cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: getNameCell(), for: indexPath)
+		
+		let key = _CollectionSection[indexPath.section].range.location + indexPath.row
+		setDataCell(cell: &cell, item: _Collection[key].representativeItem!)
+		
 		return cell
 	}
 	
@@ -142,8 +131,8 @@ class AbstractTableViewController: UIViewController, UITableViewDelegate, UITabl
 		}
 		else if vcNext != nil {
 			// UIViewController
-			vcNext!.modalTransitionStyle = .coverVertical
-			self.present(vcNext!, animated: true, completion: nil)
+			vcNext!.modalPresentationStyle = .overCurrentContext
+			parent?.parent?.present(vcNext!, animated: false, completion: nil)
 		}
 	}
 	

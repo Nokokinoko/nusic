@@ -1,3 +1,4 @@
 "version" = "バージョン";
 "thank" = "謝辞";
 "description" = "Thank you for using";
+"NSAppleMusicUsageDescription" = "音楽の再生";

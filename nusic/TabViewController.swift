@@ -53,11 +53,9 @@ class TabViewController: UITabBarController, UITabBarControllerDelegate {
 	
 	func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
 		if viewController is DummyViewController {
-			if let current = self.selectedViewController {
-				let vcPlay = PlayViewController()
-				vcPlay.modalTransitionStyle = .coverVertical
-				current.present(vcPlay, animated: true, completion: nil)
-			}
+			let vcPlay = PlayViewController()
+			vcPlay.modalPresentationStyle = .overCurrentContext
+			self.present(vcPlay, animated: false, completion: nil)
 			return false
 		}
 		return true
