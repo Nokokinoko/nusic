@@ -75,12 +75,9 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		var count: Int = 0
 		switch section {
-		case KEY_SECTION.VERSION.rawValue:
-			count = 1
-		case KEY_SECTION.THANK.rawValue:
-			count = 3
-		case KEY_SECTION.MYSELF.rawValue:
-			count = 2
+		case KEY_SECTION.VERSION.rawValue:	count = 1
+		case KEY_SECTION.THANK.rawValue:	count = 3
+		case KEY_SECTION.MYSELF.rawValue:	count = 2
 		default: break
 		}
 		return count

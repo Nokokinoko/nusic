@@ -9,7 +9,7 @@
 import UIKit
 import MediaPlayer
 
-class SongTableViewController: AbstractTableViewController {
+class SongTableViewController: AbstractTableVC {
 	
 	private enum CALL_FROM {
 		case NONE
@@ -18,7 +18,7 @@ class SongTableViewController: AbstractTableViewController {
 		case ALBUM
 	}
 	private var _CallFrom: CALL_FROM = CALL_FROM.NONE
-	private var _Filter: String?
+	private var _PersistentID: MPMediaEntityPersistentID = 0 // UInt64
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -27,44 +27,76 @@ class SongTableViewController: AbstractTableViewController {
 		resetBtnLeft()
 	}
 	
-	// >>> Call
-	public func callFromPlayList(filter: String) {
+	public func callFromPlayList(persistentID: MPMediaEntityPersistentID) {
 		_CallFrom = CALL_FROM.PLAY_LIST
-		_Filter = filter
+		_PersistentID = persistentID
 	}
 	
-	public func callFromArtist(filter: String) {
+	public func isFilterPlayList() -> Bool {
+		return _CallFrom == CALL_FROM.PLAY_LIST
+	}
+	
+	public func callFromArtist(persistentID: MPMediaEntityPersistentID) {
 		_CallFrom = CALL_FROM.ARTIST
-		_Filter = filter
+		_PersistentID = persistentID
 	}
 	
-	public func callFromAlbum(filter: String) {
+	public func isFilterArtist() -> Bool {
+		return _CallFrom == CALL_FROM.ARTIST
+	}
+	
+	public func callFromAlbum(persistentID: MPMediaEntityPersistentID) {
 		_CallFrom = CALL_FROM.ALBUM
-		_Filter = filter
+		_PersistentID = persistentID
 	}
-	// <<< Call
 	
-	override func getName() -> String {
+	public func isFilterAlbum() -> Bool {
+		return _CallFrom == CALL_FROM.ALBUM
+	}
+	
+	public func getPersistentID() -> MPMediaEntityPersistentID {
+		return _PersistentID
+	}
+	
+	override func haveSection() -> Bool {
+		return _CallFrom == CALL_FROM.NONE
+	}
+	
+}
+
+extension SongTableViewController: ProtocolTableVC {
+	
+	func getName() -> String {
 		return "Song"
 	}
 	
-	override func getMediaQuery() -> MPMediaQuery? {
+	func getMediaQuery() -> MPMediaQuery {
 		let query = MPMediaQuery.songs()
-		query.addFilterPredicate(MPMediaPropertyPredicate(value: false, forProperty: MPMediaItemPropertyIsCloudItem))
+		switch true {
+		case isFilterPlayList():	query.groupingType = MPMediaGrouping.playlist
+		case isFilterArtist():		query.groupingType = MPMediaGrouping.artist
+		case isFilterAlbum():		query.groupingType = MPMediaGrouping.album
+		default: break
+		}
+		query.addFilterPredicate(MPMediaPropertyPredicate(
+			value: getPersistentID(),
+			forProperty: MPMediaItemPropertyPersistentID
+		))
+		query.addFilterPredicate(MPMediaPropertyPredicate(
+			value: false,
+			forProperty: MPMediaItemPropertyIsCloudItem
+		))
 		return query
 	}
 	
-	override func setDataCell(cell: inout UITableViewCell, item: MPMediaItem) {
-		let artwork = item.artwork
-		cell.imageView?.image = artwork?.image(at: (cell.imageView?.bounds.size)!)
+	func setDataCell(cell: inout UITableViewCell, item: MPMediaItem) {
+		cell.imageView?.image = item.artwork?.image(at: (cell.imageView?.bounds.size)!)
 		cell.textLabel?.text = item.value(forProperty: MPMediaItemPropertyTitle) as? String
 		cell.detailTextLabel?.text = item.value(forProperty: MPMediaItemPropertyArtist) as? String
 	}
 	
-	override func onSelect(indexPath: IndexPath) -> UIViewController? {
-		let vcPlay = PlayViewController()
-		// TODO: send song
-		return vcPlay
+	func onSelect(item: MPMediaItem) -> UIViewController {
+		return PlayViewController()
 	}
 	
 }

@@ -11,11 +11,11 @@ import UIKit
 class TabViewController: UITabBarController, UITabBarControllerDelegate {
 	
 	private enum TAG: Int {
-		case PLAY_LIST
-		case ARTIST
-		case ALBUM
-		case SONG
-		case PLAY
+		case PLAY_LIST = 0
+		case ARTIST = 1
+		case ALBUM = 2
+		case SONG = 3
+		case PLAY = 4
 	}
 	
 	class DummyViewController: UIViewController {}
@@ -45,14 +45,20 @@ class TabViewController: UITabBarController, UITabBarControllerDelegate {
 		
 		self.setViewControllers([_NaviPlayList!, _NaviArtist!, _NaviAlbum!, _NaviSong!, _NaviPlay!], animated: false)
 		self.delegate = self
+		
+		updateTab()
 	}
 	
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
 	}
 	
+	public func updateTab() {
+		self.tabBar.items?[TAG.PLAY.rawValue].isEnabled = Singleton.sharedInstance.isPlaying()
+	}
+	
 	func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-		if viewController is DummyViewController {
+		if viewController is DummyViewController && Singleton.sharedInstance.isPlaying() {
 			let vcPlay = PlayViewController()
 			vcPlay.modalPresentationStyle = .overCurrentContext
 			self.present(vcPlay, animated: false, completion: nil)

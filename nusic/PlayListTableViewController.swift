@@ -9,25 +9,33 @@
 import UIKit
 import MediaPlayer
 
-class PlayListTableViewController: AbstractTableViewController {
+class PlayListTableViewController: AbstractTableVC {
 	
-	override func getName() -> String {
+	override func haveSection() -> Bool {
+		return false
+	}
+	
+}
+
+extension PlayListTableViewController: ProtocolTableVC {
+	
+	func getName() -> String {
 		return "PlayList"
 	}
 	
-	override func getMediaQuery() -> MPMediaQuery? {
+	func getMediaQuery() -> MPMediaQuery {
 		let query = MPMediaQuery.playlists()
 		query.addFilterPredicate(MPMediaPropertyPredicate(value: false, forProperty: MPMediaItemPropertyIsCloudItem))
 		return query
 	}
 	
-	override func setDataCell(cell: inout UITableViewCell, item: MPMediaItem) {
+	func setDataCell(cell: inout UITableViewCell, item: MPMediaItem) {
 		cell.textLabel?.text = item.value(forProperty: MPMediaPlaylistPropertyName) as? String
 	}
 	
-	override func onSelect(indexPath: IndexPath) -> UIViewController? {
+	func onSelect(item: MPMediaItem) -> UIViewController {
 		let vcSong = SongTableViewController()
-		vcSong.callFromPlayList(filter: "")
+		vcSong.callFromPlayList(persistentID: item.persistentID) // MPMediaPlaylistPropertyPersistentID
 		return vcSong
 	}
 	

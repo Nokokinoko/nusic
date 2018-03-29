@@ -7,10 +7,40 @@
 //
 
 import Foundation
+import MediaPlayer
 
 final class Singleton {
 	
-	private init() {}
 	static let sharedInstance = Singleton()
+	
+	private var _PlayQuery: MPMediaQuery!
+	private var _PlayItem: MPMediaItem!
+	
+	private init() {}
+	
+	public func initPlayProperty() {
+		_PlayQuery = nil
+		_PlayItem = nil
+	}
+	
+	public func setPlayQuery(query: MPMediaQuery) {
+		_PlayQuery = query
+	}
+	
+	public func getPlayQuery() -> MPMediaQuery? {
+		return _PlayQuery
+	}
+	
+	public func setPlayItem(item: MPMediaItem) {
+		_PlayItem = item
+	}
+	
+	public func getPlayItem() -> MPMediaItem? {
+		return _PlayItem
+	}
+	
+	public func isPlaying() -> Bool {
+		return _PlayItem != nil
+	}
 	
 }

@@ -11,6 +11,7 @@ import UIKit
 class PlayViewController: UIViewController {
 	
 	private var _Dismiss: Bool = false
+	open var isReserve: Bool = false
 	
 	private var _Blur: UIVisualEffectView!
 	private var _View: PlayContentView!
@@ -28,6 +29,11 @@ class PlayViewController: UIViewController {
 		_View = PlayContentView(frame: CGRect(x: 0, y: 0, width: 300, height: 400))
 		_View.center = _Blur.center
 		_Blur.addSubview(_View)
+		
+		if isReserve {
+			_View.play()
+			isReserve = false
+		}
 	}
 	
 	override func didReceiveMemoryWarning() {
@@ -51,6 +57,9 @@ class PlayViewController: UIViewController {
 		let point = touches.first?.location(in: self.view)
 		if !_View.frame.contains(point!) {
 			_Dismiss = true
+			
+			let parent = presentingViewController as! TabViewController
+			parent.updateTab()
 			
 			UIView.animate(
 				withDuration: 0.25,

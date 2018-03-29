@@ -9,27 +9,28 @@
 import UIKit
 import MediaPlayer
 
-class ArtistTableViewController: AbstractTableViewController {
+class ArtistTableViewController: AbstractTableVC {}
+
+extension ArtistTableViewController: ProtocolTableVC {
 	
-	override func getName() -> String {
+	func getName() -> String {
 		return "Artist"
 	}
 	
-	override func getMediaQuery() -> MPMediaQuery? {
+	func getMediaQuery() -> MPMediaQuery {
 		let query = MPMediaQuery.artists()
 		query.addFilterPredicate(MPMediaPropertyPredicate(value: false, forProperty: MPMediaItemPropertyIsCloudItem))
 		return query
 	}
 	
-	override func setDataCell(cell: inout UITableViewCell, item: MPMediaItem) {
-		let artwork = item.artwork
-		cell.imageView?.image = artwork?.image(at: (cell.imageView?.bounds.size)!)
+	func setDataCell(cell: inout UITableViewCell, item: MPMediaItem) {
+		cell.imageView?.image = item.artwork?.image(at: (cell.imageView?.bounds.size)!)
 		cell.textLabel?.text = item.value(forProperty: MPMediaItemPropertyArtist) as? String
 	}
 	
-	override func onSelect(indexPath: IndexPath) -> UIViewController? {
+	func onSelect(item: MPMediaItem) -> UIViewController {
 		let vcSong = SongTableViewController()
-		vcSong.callFromArtist(filter: "")
+		vcSong.callFromArtist(persistentID: item.persistentID) // MPMediaItemPropertyArtistPersistentID
 		return vcSong
 	}
 	
