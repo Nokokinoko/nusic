@@ -54,11 +54,11 @@ class TabViewController: UITabBarController, UITabBarControllerDelegate {
 	}
 	
 	public func updateTab() {
-		self.tabBar.items?[TAG.PLAY.rawValue].isEnabled = Singleton.sharedInstance.isPlaying()
+		self.tabBar.items?[TAG.PLAY.rawValue].isEnabled = Singleton.sharedInstance.isSetPlayItem()
 	}
 	
 	func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
-		if viewController is DummyViewController && Singleton.sharedInstance.isPlaying() {
+		if viewController is DummyViewController && Singleton.sharedInstance.isSetPlayItem() {
 			let vcPlay = PlayViewController()
 			vcPlay.modalPresentationStyle = .overCurrentContext
 			self.present(vcPlay, animated: false, completion: nil)

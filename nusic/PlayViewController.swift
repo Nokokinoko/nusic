@@ -10,6 +10,7 @@ import UIKit
 
 class PlayViewController: UIViewController {
 	
+	private var _Touch: Bool = false
 	private var _Dismiss: Bool = false
 	open var isReserve: Bool = false
 	
@@ -19,6 +20,7 @@ class PlayViewController: UIViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
+		_Touch = false
 		_Dismiss = false
 		
 		_Blur = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.dark))
@@ -50,6 +52,18 @@ class PlayViewController: UIViewController {
 	}
 	
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+		let point = touches.first?.location(in: self.view)
+		if !_View.frame.contains(point!) {
+			_Touch = true
+		}
+	}
+	
+	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+		if !_Touch {
+			return
+		}
+		_Touch = false
+		
 		if _Dismiss {
 			return
 		}

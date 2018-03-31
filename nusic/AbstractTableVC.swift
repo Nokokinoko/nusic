@@ -72,6 +72,7 @@ class AbstractTableVC: UIViewController, UITableViewDelegate, UITableViewDataSou
 			label.text = "I have not " + _Protocol.getName() + " :("
 			label.font = UIFont.boldSystemFont(ofSize: 30)
 			label.sizeToFit()
+			label.textColor = Define.ColorLabel
 			label.center = self.view.center
 			self.view.addSubview(label)
 		}
@@ -116,6 +117,13 @@ class AbstractTableVC: UIViewController, UITableViewDelegate, UITableViewDataSou
 	// セクション数
 	func numberOfSections(in tableView: UITableView) -> Int {
 		return haveSection() ? _CollectionSection.count : 1
+	}
+	
+	// セクション設定
+	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		let label: LabelSection = LabelSection()
+		label.text = haveSection() ? _CollectionSection[section].title : nil
+		return label
 	}
 	
 	// セクション名

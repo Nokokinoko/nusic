@@ -66,11 +66,18 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 		return _Section.count
 	}
 	
+	// セクション設定
+	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+		let label: LabelSection = LabelSection()
+		label.text = _Section[section]
+		return label
+	}
+	
 	// セクション名
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
 		return _Section[section]
 	}
-	
+
 	// セクション単位のデータ数
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		var count: Int = 0
@@ -91,19 +98,23 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 		case KEY_SECTION.VERSION.rawValue:
 			cell.textLabel?.textAlignment = .right
 			cell.textLabel?.text = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
+			cell.textLabel?.textColor = Define.ColorLabel
 			cell.selectionStyle = UITableViewCellSelectionStyle.none
 		case KEY_SECTION.THANK.rawValue:
 			switch indexPath.row {
 			case CELL_THANK.DESCRIPTION.rawValue:
 				cell.textLabel?.text = NSLocalizedString("description", comment: "")
+				cell.textLabel?.textColor = Define.ColorLabel
 				cell.selectionStyle = UITableViewCellSelectionStyle.none
 			case CELL_THANK.REVIEW.rawValue:
 				cell.indentationLevel = 1
 				cell.textLabel?.text = "Review"
+				cell.textLabel?.textColor = Define.ColorLabel
 				cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
 			case CELL_THANK.DONATION.rawValue:
 				cell.indentationLevel = 1
 				cell.textLabel?.text = "Donation"
+				cell.textLabel?.textColor = Define.ColorLabel
 				cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
 			default: break
 			}
@@ -112,10 +123,12 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 			case CELL_MYSELF.WEB.rawValue:
 				cell.indentationLevel = 1
 				cell.textLabel?.text = "WEB"
+				cell.textLabel?.textColor = Define.ColorLabel
 				cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
 			case CELL_MYSELF.APP.rawValue:
 				cell.indentationLevel = 1
 				cell.textLabel?.text = "APP"
+				cell.textLabel?.textColor = Define.ColorLabel
 				cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
 			default: break
 			}

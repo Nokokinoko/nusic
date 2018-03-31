@@ -39,7 +39,7 @@ final class Singleton {
 		return _PlayItem
 	}
 	
-	public func isPlaying() -> Bool {
+	public func isSetPlayItem() -> Bool {
 		return _PlayItem != nil
 	}
 	

@@ -72,16 +72,21 @@ extension SongTableViewController: ProtocolTableVC {
 	
 	func getMediaQuery() -> MPMediaQuery {
 		let query = MPMediaQuery.songs()
+		var forProperty: String! = nil
+		
 		switch true {
-		case isFilterPlayList():	query.groupingType = MPMediaGrouping.playlist
-		case isFilterArtist():		query.groupingType = MPMediaGrouping.artist
-		case isFilterAlbum():		query.groupingType = MPMediaGrouping.album
+		case isFilterPlayList():	query.groupingType = MPMediaGrouping.playlist;	forProperty = MPMediaPlaylistPropertyPersistentID
+		case isFilterArtist():		query.groupingType = MPMediaGrouping.artist;	forProperty = MPMediaItemPropertyArtistPersistentID
+		case isFilterAlbum():		query.groupingType = MPMediaGrouping.album;		forProperty = MPMediaItemPropertyAlbumPersistentID
 		default: break
 		}
-		query.addFilterPredicate(MPMediaPropertyPredicate(
-			value: getPersistentID(),
-			forProperty: MPMediaItemPropertyPersistentID
-		))
+		
+		if forProperty != nil {
+			query.addFilterPredicate(MPMediaPropertyPredicate(
+				value: getPersistentID(),
+				forProperty: forProperty
+			))
+		}
 		query.addFilterPredicate(MPMediaPropertyPredicate(
 			value: false,
 			forProperty: MPMediaItemPropertyIsCloudItem

@@ -15,6 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+		UINavigationBar.appearance().barTintColor = Define.ColorBGSection
+		UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: Define.ColorLabel]
+		
 		self.window = UIWindow(frame: UIScreen.main.bounds)
 		self.window?.rootViewController = TabViewController()
 		self.window?.makeKeyAndVisible()
