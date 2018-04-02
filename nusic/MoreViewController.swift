@@ -98,23 +98,23 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 		case KEY_SECTION.VERSION.rawValue:
 			cell.textLabel?.textAlignment = .right
 			cell.textLabel?.text = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
-			cell.textLabel?.textColor = Define.ColorLabel
+			cell.textLabel?.textColor = Define.ColorBlack
 			cell.selectionStyle = UITableViewCellSelectionStyle.none
 		case KEY_SECTION.THANK.rawValue:
 			switch indexPath.row {
 			case CELL_THANK.DESCRIPTION.rawValue:
 				cell.textLabel?.text = NSLocalizedString("description", comment: "")
-				cell.textLabel?.textColor = Define.ColorLabel
+				cell.textLabel?.textColor = Define.ColorBlack
 				cell.selectionStyle = UITableViewCellSelectionStyle.none
 			case CELL_THANK.REVIEW.rawValue:
 				cell.indentationLevel = 1
 				cell.textLabel?.text = "Review"
-				cell.textLabel?.textColor = Define.ColorLabel
+				cell.textLabel?.textColor = Define.ColorBlack
 				cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
 			case CELL_THANK.DONATION.rawValue:
 				cell.indentationLevel = 1
 				cell.textLabel?.text = "Donation"
-				cell.textLabel?.textColor = Define.ColorLabel
+				cell.textLabel?.textColor = Define.ColorBlack
 				cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
 			default: break
 			}
@@ -123,12 +123,12 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 			case CELL_MYSELF.WEB.rawValue:
 				cell.indentationLevel = 1
 				cell.textLabel?.text = "WEB"
-				cell.textLabel?.textColor = Define.ColorLabel
+				cell.textLabel?.textColor = Define.ColorBlack
 				cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
 			case CELL_MYSELF.APP.rawValue:
 				cell.indentationLevel = 1
 				cell.textLabel?.text = "APP"
-				cell.textLabel?.textColor = Define.ColorLabel
+				cell.textLabel?.textColor = Define.ColorBlack
 				cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
 			default: break
 			}

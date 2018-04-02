@@ -24,7 +24,6 @@ extension ArtistTableViewController: ProtocolTableVC {
 	}
 	
 	func setDataCell(cell: inout UITableViewCell, item: MPMediaItem) {
-		cell.imageView?.image = item.artwork?.image(at: (cell.imageView?.bounds.size)!)
 		cell.textLabel?.text = item.value(forProperty: MPMediaItemPropertyArtist) as? String
 	}
 	

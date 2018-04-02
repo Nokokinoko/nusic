@@ -24,8 +24,8 @@ class LabelSection: UILabel {
 	
 	private func setup() {
 		self.font = UIFont.boldSystemFont(ofSize: UIFont.labelFontSize)
-		self.textColor = Define.ColorLabel
-		self.backgroundColor = Define.ColorBGSection
+		self.textColor = Define.ColorBlack
+		self.backgroundColor = Define.ColorGray
 	}
 	
 	override func drawText(in rect: CGRect) {

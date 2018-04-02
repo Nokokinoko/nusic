@@ -17,7 +17,7 @@ class AbstractTableVC: UIViewController, UITableViewDelegate, UITableViewDataSou
 	private var _BtnLeft: UIBarButtonItem!
 	internal var _TableView: UITableView!
 	
-	private var _Collection: [MPMediaItemCollection]!
+	internal var _Collection: [MPMediaItemCollection]!
 	private var _CollectionSection: [MPMediaQuerySection]!
 	
 	private let SUFFIX_CELL = "TableViewCell"
@@ -72,7 +72,7 @@ class AbstractTableVC: UIViewController, UITableViewDelegate, UITableViewDataSou
 			label.text = "I have not " + _Protocol.getName() + " :("
 			label.font = UIFont.boldSystemFont(ofSize: 30)
 			label.sizeToFit()
-			label.textColor = Define.ColorLabel
+			label.textColor = Define.ColorBlack
 			label.center = self.view.center
 			self.view.addSubview(label)
 		}

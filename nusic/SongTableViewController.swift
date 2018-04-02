@@ -75,9 +75,9 @@ extension SongTableViewController: ProtocolTableVC {
 		var forProperty: String! = nil
 		
 		switch true {
-		case isFilterPlayList():	query.groupingType = MPMediaGrouping.playlist;	forProperty = MPMediaPlaylistPropertyPersistentID
-		case isFilterArtist():		query.groupingType = MPMediaGrouping.artist;	forProperty = MPMediaItemPropertyArtistPersistentID
-		case isFilterAlbum():		query.groupingType = MPMediaGrouping.album;		forProperty = MPMediaItemPropertyAlbumPersistentID
+		case isFilterPlayList():	forProperty = MPMediaPlaylistPropertyPersistentID
+		case isFilterArtist():		forProperty = MPMediaItemPropertyArtistPersistentID
+		case isFilterAlbum():		forProperty = MPMediaItemPropertyAlbumPersistentID
 		default: break
 		}
 		
@@ -95,7 +95,12 @@ extension SongTableViewController: ProtocolTableVC {
 	}
 	
 	func setDataCell(cell: inout UITableViewCell, item: MPMediaItem) {
-		cell.imageView?.image = item.artwork?.image(at: (cell.imageView?.bounds.size)!)
+		if let artwork = item.artwork {
+			cell.imageView?.image = artwork.image(at: (cell.imageView?.bounds.size)!)
+		}
+		else {
+			cell.imageView?.image = UIImage(named: "NoImage")
+		}
 		cell.textLabel?.text = item.value(forProperty: MPMediaItemPropertyTitle) as? String
 		cell.detailTextLabel?.text = item.value(forProperty: MPMediaItemPropertyArtist) as? String
 	}

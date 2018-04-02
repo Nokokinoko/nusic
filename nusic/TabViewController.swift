@@ -37,11 +37,17 @@ class TabViewController: UITabBarController, UITabBarControllerDelegate {
 		_NaviSong = UINavigationController(rootViewController: SongTableViewController())
 		_NaviPlay = DummyViewController()
 		
-		_NaviPlayList.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: TAG.PLAY_LIST.rawValue)
-		_NaviArtist.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: TAG.ARTIST.rawValue)
-		_NaviAlbum.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: TAG.ALBUM.rawValue)
-		_NaviSong.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: TAG.SONG.rawValue)
-		_NaviPlay.tabBarItem = UITabBarItem(tabBarSystemItem: UITabBarSystemItem.featured, tag: TAG.PLAY.rawValue)
+		self.tabBar.unselectedItemTintColor = Define.ColorGray
+		self.tabBar.tintColor = Define.ColorBlue
+		self.tabBar.barTintColor = Define.ColorBlack
+		UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: Define.ColorGray], for: UIControlState.normal)
+		UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: Define.ColorBlue], for: UIControlState.selected)
+		
+		_NaviPlayList.tabBarItem = UITabBarItem(title: "PlayList", image: UIImage(named: "TagPlayList"), tag: TAG.PLAY_LIST.rawValue)
+		_NaviArtist.tabBarItem = UITabBarItem(title: "Artist", image: UIImage(named: "TagArtist"), tag: TAG.ARTIST.rawValue)
+		_NaviAlbum.tabBarItem = UITabBarItem(title: "Album", image: UIImage(named: "TagAlbum"), tag: TAG.ALBUM.rawValue)
+		_NaviSong.tabBarItem = UITabBarItem(title: "Song", image: UIImage(named: "TagSong"), tag: TAG.SONG.rawValue)
+		_NaviPlay.tabBarItem = UITabBarItem(title: "Play", image: UIImage(named: "TagPlay"), tag: TAG.PLAY.rawValue)
 		
 		self.setViewControllers([_NaviPlayList!, _NaviArtist!, _NaviAlbum!, _NaviSong!, _NaviPlay!], animated: false)
 		self.delegate = self

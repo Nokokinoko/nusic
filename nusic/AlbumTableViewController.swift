@@ -24,7 +24,12 @@ extension AlbumTableViewController: ProtocolTableVC {
 	}
 	
 	func setDataCell(cell: inout UITableViewCell, item: MPMediaItem) {
-		cell.imageView?.image = item.artwork?.image(at: (cell.imageView?.bounds.size)!)
+		if let artwork = item.artwork {
+			cell.imageView?.image = artwork.image(at: (cell.imageView?.bounds.size)!)
+		}
+		else {
+			cell.imageView?.image = UIImage(named: "NoImage")
+		}
 		cell.textLabel?.text = item.value(forProperty: MPMediaItemPropertyAlbumTitle) as? String
 		cell.detailTextLabel?.text = item.value(forProperty: MPMediaItemPropertyAlbumArtist) as? String
 	}
