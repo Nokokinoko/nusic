@@ -23,7 +23,7 @@ class PlayListTableViewController: AbstractTableVC {
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell: UITableViewCell = tableView.dequeueReusableCell(withIdentifier: getNameCell(), for: indexPath)
 		
-		let playlist: MPMediaPlaylist = _Collection[indexPath.row] as! MPMediaPlaylist
+		let playlist: MPMediaPlaylist = _CollectionArr[indexPath.row] as! MPMediaPlaylist
 		cell.textLabel?.text = playlist.name
 		
 		return cell
@@ -33,9 +33,9 @@ class PlayListTableViewController: AbstractTableVC {
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
 		
-		let playlist: MPMediaPlaylist = _Collection[indexPath.row] as! MPMediaPlaylist
+		let playlist: MPMediaPlaylist = _CollectionArr[indexPath.row] as! MPMediaPlaylist
 		let vcSong = SongTableViewController()
-		vcSong.callFromPlayList(persistentID: playlist.persistentID) // MPMediaPlaylistPropertyPersistentID
+		vcSong.callFromPlayList(persistentID: playlist.persistentID)
 		goNext(vcNext: vcSong)
 	}
 	
@@ -57,7 +57,7 @@ extension PlayListTableViewController: ProtocolTableVC {
 		assert(false, "Do not call setDataCell")
 	}
 	
-	func onSelect(item: MPMediaItem) -> UIViewController {
+	func onSelect(item: MPMediaItem) -> AbstractTableVC {
 		assert(false, "Do not call onSelect")
 	}
 	

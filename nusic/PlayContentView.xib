@@ -74,27 +74,32 @@
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                     <state key="normal" image="CtrlPrev"/>
                 </button>
-                <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kZ7-8w-Qvb" userLabel="CtrlRepeat">
-                    <rect key="frame" x="224" y="373" width="40" height="40"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                    <state key="normal" image="CtrlRepeat"/>
-                </button>
                 <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CwM-jO-3IG" userLabel="CtrlShuffle">
-                    <rect key="frame" x="36" y="373" width="40" height="40"/>
+                    <rect key="frame" x="57" y="373" width="40" height="40"/>
                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                    <state key="normal" image="CtrlShuffle"/>
+                    <state key="normal" image="CtrlShuffleOff"/>
+                </button>
+                <button opaque="NO" contentMode="scaleAspectFit" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kZ7-8w-Qvb" userLabel="CtrlRepeat">
+                    <rect key="frame" x="203" y="373" width="40" height="40"/>
+                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                    <state key="normal" image="CtrlRepeatOff"/>
                 </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <nil key="simulatedStatusBarMetrics"/>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                    <integer key="value" value="10"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
         </view>
     </objects>
     <resources>
         <image name="CtrlNext" width="250" height="250"/>
         <image name="CtrlPlay" width="250" height="250"/>
         <image name="CtrlPrev" width="250" height="250"/>
-        <image name="CtrlRepeat" width="250" height="250"/>
-        <image name="CtrlShuffle" width="250" height="250"/>
+        <image name="CtrlRepeatOff" width="250" height="250"/>
+        <image name="CtrlShuffleOff" width="250" height="250"/>
     </resources>
 </document>

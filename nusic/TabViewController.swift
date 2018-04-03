@@ -43,11 +43,11 @@ class TabViewController: UITabBarController, UITabBarControllerDelegate {
 		UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: Define.ColorGray], for: UIControlState.normal)
 		UITabBarItem.appearance().setTitleTextAttributes([NSForegroundColorAttributeName: Define.ColorBlue], for: UIControlState.selected)
 		
-		_NaviPlayList.tabBarItem = UITabBarItem(title: "PlayList", image: UIImage(named: "TagPlayList"), tag: TAG.PLAY_LIST.rawValue)
-		_NaviArtist.tabBarItem = UITabBarItem(title: "Artist", image: UIImage(named: "TagArtist"), tag: TAG.ARTIST.rawValue)
-		_NaviAlbum.tabBarItem = UITabBarItem(title: "Album", image: UIImage(named: "TagAlbum"), tag: TAG.ALBUM.rawValue)
-		_NaviSong.tabBarItem = UITabBarItem(title: "Song", image: UIImage(named: "TagSong"), tag: TAG.SONG.rawValue)
-		_NaviPlay.tabBarItem = UITabBarItem(title: "Play", image: UIImage(named: "TagPlay"), tag: TAG.PLAY.rawValue)
+		_NaviPlayList.tabBarItem = UITabBarItem(title: "PlayList", image: UIImage(named: "TabPlayList"), tag: TAG.PLAY_LIST.rawValue)
+		_NaviArtist.tabBarItem = UITabBarItem(title: "Artist", image: UIImage(named: "TabArtist"), tag: TAG.ARTIST.rawValue)
+		_NaviAlbum.tabBarItem = UITabBarItem(title: "Album", image: UIImage(named: "TabAlbum"), tag: TAG.ALBUM.rawValue)
+		_NaviSong.tabBarItem = UITabBarItem(title: "Song", image: UIImage(named: "TabSong"), tag: TAG.SONG.rawValue)
+		_NaviPlay.tabBarItem = UITabBarItem(title: "Play", image: UIImage(named: "TabPlay"), tag: TAG.PLAY.rawValue)
 		
 		self.setViewControllers([_NaviPlayList!, _NaviArtist!, _NaviAlbum!, _NaviSong!, _NaviPlay!], animated: false)
 		self.delegate = self

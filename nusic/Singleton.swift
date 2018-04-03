@@ -15,13 +15,9 @@ final class Singleton {
 	
 	private var _PlayQuery: MPMediaQuery!
 	private var _PlayItem: MPMediaItem!
+	private var _PlayShuffle: Bool = false
 	
 	private init() {}
-	
-	public func initPlayProperty() {
-		_PlayQuery = nil
-		_PlayItem = nil
-	}
 	
 	public func setPlayQuery(query: MPMediaQuery) {
 		_PlayQuery = query
@@ -31,7 +27,7 @@ final class Singleton {
 		return _PlayQuery
 	}
 	
-	public func setPlayItem(item: MPMediaItem) {
+	public func setPlayItem(item: MPMediaItem?) {
 		_PlayItem = item
 	}
 	
@@ -41,6 +37,14 @@ final class Singleton {
 	
 	public func isSetPlayItem() -> Bool {
 		return _PlayItem != nil
+	}
+	
+	public func setPlayShuffle(shuffle: Bool) {
+		_PlayShuffle = shuffle
+	}
+	
+	public func getPlayShuffle() -> Bool {
+		return _PlayShuffle
 	}
 	
 }

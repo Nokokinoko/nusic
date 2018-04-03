@@ -16,6 +16,6 @@ protocol ProtocolTableVC: class {
 	
 	func setDataCell(cell: inout UITableViewCell, item: MPMediaItem)
 	
-	func onSelect(item: MPMediaItem) -> UIViewController
+	func onSelect(item: MPMediaItem) -> AbstractTableVC
 	
 }

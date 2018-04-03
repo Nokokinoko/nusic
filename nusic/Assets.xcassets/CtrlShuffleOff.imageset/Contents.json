@@ -2,12 +2,11 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "TabSong.png",
+      "filename" : "CtrlShuffleOff.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "TabSong@2x.png",
       "scale" : "2x"
     },
     {

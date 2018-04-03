@@ -29,12 +29,11 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 	private let _ImagePause: UIImage = UIImage(named: "CtrlPause")!
 	private let _ImageNext: UIImage = UIImage(named: "CtrlNext")!
 	private let _ImagePrev: UIImage = UIImage(named: "CtrlPrev")!
-	private let _ImageRepeat: UIImage = UIImage(named: "CtrlRepeat")!
+	private let _ImageRepeatOn: UIImage = UIImage(named: "CtrlRepeatOn")!
 	private let _ImageRepeatOne: UIImage = UIImage(named: "CtrlRepeatOne")!
-	private let _ImageShuffle: UIImage = UIImage(named: "CtrlShuffle")!
-	
-	private let _ColorOn: UIColor = UIColor(red: 0.91, green: 0.35, blue: 0.44, alpha: 1.0)
-	private let _ColorOff: UIColor = UIColor(red: 0.92, green: 0.92, blue: 0.92, alpha: 1.0)
+	private let _ImageRepeatOff: UIImage = UIImage(named: "CtrlRepeatOff")!
+	private let _ImageShuffleOn: UIImage = UIImage(named: "CtrlShuffleOn")!
+	private let _ImageShuffleOff: UIImage = UIImage(named: "CtrlShuffleOff")!
 	
 	override init(frame: CGRect) {
 		super.init(frame: frame)
@@ -113,7 +112,13 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 	public func play() {
 		if let query = Singleton.sharedInstance.getPlayQuery() {
 			_Player.setQueue(with: query)
-			_Player.nowPlayingItem = Singleton.sharedInstance.getPlayItem()
+			if Singleton.sharedInstance.isSetPlayItem() {
+				_Player.nowPlayingItem = Singleton.sharedInstance.getPlayItem()
+			}
+			
+			_Player.shuffleMode = Singleton.sharedInstance.getPlayShuffle() ? .songs : .default
+			resetCtrlShuffle()
+			
 			_Player.play()
 			resetCtrlPlay()
 		}
@@ -155,15 +160,25 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 		switch _Player.repeatMode {
 		case .none:
 			_Player.repeatMode = .all
-			_CtrlRepeat.setImage(_ImageRepeat, for: .normal)
-			_CtrlRepeat.tintColor = _ColorOn
+			_CtrlRepeat.setImage(_ImageRepeatOn, for: .normal)
+			_CtrlRepeat.tintColor = Define.ColorPink
 		case .all:
 			_Player.repeatMode = .one
 			_CtrlRepeat.setImage(_ImageRepeatOne, for: .normal)
 		case .one:
 			_Player.repeatMode = .none
-			_CtrlRepeat.setImage(_ImageRepeat, for: .normal)
-			_CtrlRepeat.tintColor = _ColorOff
+			_CtrlRepeat.setImage(_ImageRepeatOff, for: .normal)
+			_CtrlRepeat.tintColor = Define.ColorGray
+		default: break
+		}
+	}
+	
+	private func resetCtrlShuffle() {
+		switch _Player.shuffleMode {
+		case .off:
+			_CtrlShuffle.setImage(_ImageShuffleOff, for: .normal)
+		case .songs:
+			_CtrlShuffle.setImage(_ImageShuffleOn, for: .normal)
 		default: break
 		}
 	}
@@ -172,40 +187,40 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 		switch _Player.shuffleMode {
 		case .off:
 			_Player.shuffleMode = .songs
-			_CtrlShuffle.setImage(_ImageShuffle, for: .normal)
-			_CtrlShuffle.tintColor = _ColorOn
 		case .songs:
 			_Player.shuffleMode = .off
-			_CtrlShuffle.setImage(_ImageShuffle, for: .normal)
-			_CtrlShuffle.tintColor = _ColorOff
 		default: break
 		}
+		resetCtrlShuffle()
 	}
 	
 	@objc func changeItem(notification: Notification) {
 		if let item = _Player.nowPlayingItem {
 			Singleton.sharedInstance.setPlayItem(item: item)
-			
-			var info = MPNowPlayingInfoCenter.default().nowPlayingInfo
-			
-			info?[MPMediaItemPropertyArtwork] = item.artwork
-			_Artwork.image = item.artwork?.image(at: _Artwork.bounds.size)
-			
-			let song = item.title == nil ? "-" : item.title
-			info?[MPMediaItemPropertyTitle] = song
-			_LabelSong.text = song
-			
-			let album = item.albumTitle == nil ? "-" : item.albumTitle
-			_LabelAlbum.text = album
-			
-			let artist = item.artist == nil ? "-" : item.artist
-			info?[MPMediaItemPropertyArtist] = artist
-			_LabelArtist.text = artist
-			
-			info?[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
-			info?[MPMediaItemPropertyPlaybackDuration] = item.playbackDuration
-			info?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = _Player.currentPlaybackTime
+			setPlayingItem(item: item)
 		}
+	}
+	
+	public func setPlayingItem(item: MPMediaItem) {
+		var info = MPNowPlayingInfoCenter.default().nowPlayingInfo
+		
+		info?[MPMediaItemPropertyArtwork] = item.artwork
+		_Artwork.image = item.artwork?.image(at: _Artwork.bounds.size)
+		
+		let song = item.title == nil ? "-" : item.title
+		info?[MPMediaItemPropertyTitle] = song
+		_LabelSong.text = song
+		
+		let album = item.albumTitle == nil ? "-" : item.albumTitle
+		_LabelAlbum.text = album
+		
+		let artist = item.artist == nil ? "-" : item.artist
+		info?[MPMediaItemPropertyArtist] = artist
+		_LabelArtist.text = artist
+		
+		info?[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
+		info?[MPMediaItemPropertyPlaybackDuration] = item.playbackDuration
+		info?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = _Player.currentPlaybackTime
 	}
 
 }

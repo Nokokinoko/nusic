@@ -34,9 +34,9 @@ extension AlbumTableViewController: ProtocolTableVC {
 		cell.detailTextLabel?.text = item.value(forProperty: MPMediaItemPropertyAlbumArtist) as? String
 	}
 	
-	func onSelect(item: MPMediaItem) -> UIViewController {
+	func onSelect(item: MPMediaItem) -> AbstractTableVC {
 		let vcSong = SongTableViewController()
-		vcSong.callFromAlbum(persistentID: item.persistentID) // MPMediaItemPropertyAlbumPersistentID
+		vcSong.callFromAlbum(persistentID: item.albumPersistentID)
 		return vcSong
 	}
 	

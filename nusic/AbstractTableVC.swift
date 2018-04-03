@@ -17,8 +17,9 @@ class AbstractTableVC: UIViewController, UITableViewDelegate, UITableViewDataSou
 	private var _BtnLeft: UIBarButtonItem!
 	internal var _TableView: UITableView!
 	
-	internal var _Collection: [MPMediaItemCollection]!
-	private var _CollectionSection: [MPMediaQuerySection]!
+	internal var _ItemArr: [MPMediaItem]!
+	internal var _CollectionArr: [MPMediaItemCollection]!
+	internal var _SectionArr: [MPMediaQuerySection]!
 	
 	private let SUFFIX_CELL = "TableViewCell"
 	
@@ -47,10 +48,11 @@ class AbstractTableVC: UIViewController, UITableViewDelegate, UITableViewDataSou
 		super.viewDidLoad()
 		
 		let query = _Protocol.getMediaQuery()
-		_Collection = query.collections
-		_CollectionSection = query.collectionSections
+		_ItemArr = query.items
+		_CollectionArr = query.collections
+		_SectionArr = query.collectionSections
 		
-		let count = (_Collection != nil) ? _Collection.count : 0
+		let count = getCount()
 		self.navigationItem.title = _Protocol.getName() + " / " + count.description + " Hit"
 		
 		_BtnLeft = UIBarButtonItem(title: "< Back", style: UIBarButtonItemStyle.plain, target: self, action: #selector(AbstractTableVC.goBack))
@@ -82,6 +84,10 @@ class AbstractTableVC: UIViewController, UITableViewDelegate, UITableViewDataSou
 		super.didReceiveMemoryWarning()
 	}
 	
+	func getCount() -> Int {
+		return (_CollectionArr != nil) ? _CollectionArr.count : 0
+	}
+	
 	func getNameCell() -> String {
 		return _Protocol.getName() + SUFFIX_CELL
 	}
@@ -105,9 +111,9 @@ class AbstractTableVC: UIViewController, UITableViewDelegate, UITableViewDataSou
 	}
 	
 	func getItem(indexPath: IndexPath) -> MPMediaItem? {
-		var key = haveSection() ? _CollectionSection[indexPath.section].range.location : 0
+		var key = haveSection() ? _SectionArr[indexPath.section].range.location : 0
 		key += indexPath.row
-		return _Collection[key].representativeItem
+		return _CollectionArr[key].representativeItem
 	}
 	
 	func haveSection() -> Bool {
@@ -116,24 +122,24 @@ class AbstractTableVC: UIViewController, UITableViewDelegate, UITableViewDataSou
 	
 	// セクション数
 	func numberOfSections(in tableView: UITableView) -> Int {
-		return haveSection() ? _CollectionSection.count : 1
+		return haveSection() ? _SectionArr.count : 1
 	}
 	
 	// セクション設定
 	func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
 		let label: LabelSection = LabelSection()
-		label.text = haveSection() ? _CollectionSection[section].title : nil
+		label.text = haveSection() ? _SectionArr[section].title : nil
 		return label
 	}
 	
 	// セクション名
 	func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-		return haveSection() ? _CollectionSection[section].title : nil
+		return haveSection() ? _SectionArr[section].title : nil
 	}
 	
 	// セクション単位のデータ数
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-		return haveSection() ? _CollectionSection[section].range.length : _Collection.count
+		return haveSection() ? _SectionArr[section].range.length : _CollectionArr.count
 	}
 	
 	// セルデータを返す
@@ -152,18 +158,7 @@ class AbstractTableVC: UIViewController, UITableViewDelegate, UITableViewDataSou
 		tableView.deselectRow(at: indexPath, animated: true)
 		
 		if let item = getItem(indexPath: indexPath) {
-			let vcNext = _Protocol.onSelect(item: item)
-			if vcNext is AbstractTableVC {
-				goNext(vcNext: vcNext)
-			}
-			else if let vcPlay = vcNext as? PlayViewController {
-				Singleton.sharedInstance.setPlayQuery(query: _Protocol.getMediaQuery())
-				Singleton.sharedInstance.setPlayItem(item: item)
-				vcPlay.isReserve = true
-				
-				vcPlay.modalPresentationStyle = .overCurrentContext
-				parent?.parent?.present(vcPlay, animated: false, completion: nil)
-			}
+			goNext(vcNext: _Protocol.onSelect(item: item))
 		}
 	}
 	

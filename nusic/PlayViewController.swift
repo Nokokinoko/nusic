@@ -36,6 +36,9 @@ class PlayViewController: UIViewController {
 			_View.play()
 			isReserve = false
 		}
+		else {
+			_View.setPlayingItem(item: Singleton.sharedInstance.getPlayItem()!)
+		}
 	}
 	
 	override func didReceiveMemoryWarning() {
