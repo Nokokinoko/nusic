@@ -25,16 +25,6 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 	@IBOutlet weak var _CtrlRepeat: UIButton!
 	@IBOutlet weak var _CtrlShuffle: UIButton!
 	
-	private let _ImagePlay: UIImage = UIImage(named: "CtrlPlay")!
-	private let _ImagePause: UIImage = UIImage(named: "CtrlPause")!
-	private let _ImageNext: UIImage = UIImage(named: "CtrlNext")!
-	private let _ImagePrev: UIImage = UIImage(named: "CtrlPrev")!
-	private let _ImageRepeatOn: UIImage = UIImage(named: "CtrlRepeatOn")!
-	private let _ImageRepeatOne: UIImage = UIImage(named: "CtrlRepeatOne")!
-	private let _ImageRepeatOff: UIImage = UIImage(named: "CtrlRepeatOff")!
-	private let _ImageShuffleOn: UIImage = UIImage(named: "CtrlShuffleOn")!
-	private let _ImageShuffleOff: UIImage = UIImage(named: "CtrlShuffleOff")!
-	
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		setup()
@@ -57,8 +47,6 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 		_CtrlPrev.addTarget(self, action: #selector(PlayContentView.touchPrev), for: .touchUpInside)
 		_CtrlRepeat.addTarget(self, action: #selector(PlayContentView.touchRepeat), for: .touchUpInside)
 		_CtrlShuffle.addTarget(self, action: #selector(PlayContentView.touchShuffle), for: .touchUpInside)
-		
-		resetCtrlPlay()
 		
 		let notification = NotificationCenter.default
 		notification.addObserver(
@@ -117,19 +105,14 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 			}
 			
 			_Player.shuffleMode = Singleton.sharedInstance.getPlayShuffle() ? .songs : .default
-			resetCtrlShuffle()
-			
 			_Player.play()
-			resetCtrlPlay()
 		}
 	}
 	
 	private func resetCtrlPlay() {
 		switch _Player.playbackState {
-		case .playing:
-			_CtrlPlay.setImage(_ImagePlay, for: .normal)
-		case .paused:
-			_CtrlPlay.setImage(_ImagePause, for: .normal)
+		case .playing:	_CtrlPlay.setImage(Define.ImagePlay, for: .normal)
+		case .paused:	_CtrlPlay.setImage(Define.ImagePause, for: .normal)
 		default: break
 		}
 	}
@@ -156,41 +139,45 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 		}
 	}
 	
-	@objc func touchRepeat() {
+	private func resetCtrlRepeat() {
 		switch _Player.repeatMode {
-		case .none:
-			_Player.repeatMode = .all
-			_CtrlRepeat.setImage(_ImageRepeatOn, for: .normal)
-			_CtrlRepeat.tintColor = Define.ColorPink
-		case .all:
-			_Player.repeatMode = .one
-			_CtrlRepeat.setImage(_ImageRepeatOne, for: .normal)
-		case .one:
-			_Player.repeatMode = .none
-			_CtrlRepeat.setImage(_ImageRepeatOff, for: .normal)
-			_CtrlRepeat.tintColor = Define.ColorGray
+		case .none:	_CtrlRepeat.setImage(Define.ImageRepeatOff, for: .normal)
+		case .all:	_CtrlRepeat.setImage(Define.ImageRepeatOn, for: .normal)
+		case .one:	_CtrlRepeat.setImage(Define.ImageRepeatOne, for: .normal)
 		default: break
 		}
 	}
 	
+	@objc func touchRepeat() {
+		switch _Player.repeatMode {
+		case .none:	_Player.repeatMode = .all
+		case .all:	_Player.repeatMode = .one
+		case .one:	_Player.repeatMode = .none
+		default: break
+		}
+		resetCtrlRepeat()
+	}
+	
 	private func resetCtrlShuffle() {
 		switch _Player.shuffleMode {
-		case .off:
-			_CtrlShuffle.setImage(_ImageShuffleOff, for: .normal)
-		case .songs:
-			_CtrlShuffle.setImage(_ImageShuffleOn, for: .normal)
+		case .off:		_CtrlShuffle.setImage(Define.ImageShuffleOff, for: .normal)
+		case .songs:	_CtrlShuffle.setImage(Define.ImageShuffleOn, for: .normal)
 		default: break
 		}
 	}
 	
 	@objc func touchShuffle() {
 		switch _Player.shuffleMode {
-		case .off:
-			_Player.shuffleMode = .songs
-		case .songs:
-			_Player.shuffleMode = .off
+		case .off:		_Player.shuffleMode = .songs
+		case .songs:	_Player.shuffleMode = .off
 		default: break
 		}
+		resetCtrlShuffle()
+	}
+	
+	public func resetAll() {
+		resetCtrlPlay()
+		resetCtrlRepeat()
 		resetCtrlShuffle()
 	}
 	
@@ -204,8 +191,14 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 	public func setPlayingItem(item: MPMediaItem) {
 		var info = MPNowPlayingInfoCenter.default().nowPlayingInfo
 		
-		info?[MPMediaItemPropertyArtwork] = item.artwork
-		_Artwork.image = item.artwork?.image(at: _Artwork.bounds.size)
+		if let artwork = item.artwork {
+			info?[MPMediaItemPropertyArtwork] = artwork
+			_Artwork.image = artwork.image(at: _Artwork.bounds.size)
+		}
+		else {
+			info?[MPMediaItemPropertyArtwork] = Define.NoImage
+			_Artwork.image = Define.NoImage
+		}
 		
 		let song = item.title == nil ? "-" : item.title
 		info?[MPMediaItemPropertyTitle] = song

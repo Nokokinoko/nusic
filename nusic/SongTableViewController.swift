@@ -148,7 +148,7 @@ class SongTableViewController: AbstractTableVC {
 			}
 		}
 		else {
-			cell.imageView?.image = UIImage(named: "CtrlShuffleOn")
+			cell.imageView?.image = Define.ImageShuffleOn
 			cell.textLabel?.text = "Play Shuffle"
 			cell.detailTextLabel?.text = nil
 		}
@@ -219,7 +219,7 @@ extension SongTableViewController: ProtocolTableVC {
 			cell.imageView?.image = artwork.image(at: (cell.imageView?.bounds.size)!)
 		}
 		else {
-			cell.imageView?.image = UIImage(named: "NoImage")
+			cell.imageView?.image = Define.NoImage
 		}
 		cell.textLabel?.text = item.value(forProperty: MPMediaItemPropertyTitle) as? String
 		cell.detailTextLabel?.text = item.value(forProperty: MPMediaItemPropertyArtist) as? String
