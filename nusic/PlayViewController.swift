@@ -39,7 +39,6 @@ class PlayViewController: UIViewController {
 		else {
 			_View.setPlayingItem(item: Singleton.sharedInstance.getPlayItem()!)
 		}
-		_View.resetAll()
 	}
 	
 	override func didReceiveMemoryWarning() {
@@ -49,6 +48,7 @@ class PlayViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
+		_View.resetAll()
 		UIView.animate(
 			withDuration: 0.25,
 			animations: { self._Blur.alpha = 1.0 }

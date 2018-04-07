@@ -10,6 +10,11 @@ import UIKit
 
 class MoreViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 	
+	private let NAME_STRING: String = "InfoPlist"
+	private let SIZE_HEIGHT_CELL: CGFloat = 60
+	private let SIZE_FONT_L: CGFloat = 16
+	private let SIZE_FONT_S: CGFloat = 12
+	
 	private var _TableView: UITableView!
 	
 	private enum KEY_SECTION: Int {
@@ -18,20 +23,20 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 		case MYSELF = 2
 	}
 	private let _Section: [String] = [
-		NSLocalizedString("version", comment: ""),
-		NSLocalizedString("thank", comment: ""),
+		NSLocalizedString("version", tableName: "InfoPlist", comment: ""),
+		NSLocalizedString("thank", tableName: "InfoPlist", comment: ""),
 		"Created by SYOTA TSUDA"
 	]
 	
 	private enum CELL_THANK: Int {
 		case DESCRIPTION = 0
-		case REVIEW = 1
-		case DONATION = 2
+		case DONATION = 1
 	}
 	
 	private enum CELL_MYSELF: Int {
 		case WEB = 0
 		case APP = 1
+		case COPYRIGHT = 2
 	}
 	
 	override func viewDidLoad() {
@@ -50,6 +55,8 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 		_TableView?.frame = self.view.frame
 		_TableView?.delegate = self
 		_TableView?.dataSource = self
+		_TableView?.rowHeight = UITableViewAutomaticDimension
+		_TableView?.estimatedRowHeight = SIZE_HEIGHT_CELL
 		self.view.addSubview(_TableView)
 	}
 	
@@ -83,8 +90,8 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 		var count: Int = 0
 		switch section {
 		case KEY_SECTION.VERSION.rawValue:	count = 1
-		case KEY_SECTION.THANK.rawValue:	count = 3
-		case KEY_SECTION.MYSELF.rawValue:	count = 2
+		case KEY_SECTION.THANK.rawValue:	count = 2
+		case KEY_SECTION.MYSELF.rawValue:	count = 3
 		default: break
 		}
 		return count
@@ -99,22 +106,22 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 			cell.textLabel?.textAlignment = .right
 			cell.textLabel?.text = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
 			cell.textLabel?.textColor = Define.ColorBlack
+			cell.textLabel?.font = UIFont.systemFont(ofSize: SIZE_FONT_L)
 			cell.selectionStyle = UITableViewCellSelectionStyle.none
 		case KEY_SECTION.THANK.rawValue:
 			switch indexPath.row {
 			case CELL_THANK.DESCRIPTION.rawValue:
-				cell.textLabel?.text = NSLocalizedString("description", comment: "")
+				cell.textLabel?.numberOfLines = 0
+				cell.textLabel?.lineBreakMode = NSLineBreakMode.byCharWrapping
+				cell.textLabel?.text = NSLocalizedString("description", tableName: NAME_STRING, comment: "")
 				cell.textLabel?.textColor = Define.ColorBlack
+				cell.textLabel?.font = UIFont.systemFont(ofSize: SIZE_FONT_S)
 				cell.selectionStyle = UITableViewCellSelectionStyle.none
-			case CELL_THANK.REVIEW.rawValue:
-				cell.indentationLevel = 1
-				cell.textLabel?.text = "Review"
-				cell.textLabel?.textColor = Define.ColorBlack
-				cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
 			case CELL_THANK.DONATION.rawValue:
 				cell.indentationLevel = 1
-				cell.textLabel?.text = "Donation"
+				cell.textLabel?.text = NSLocalizedString("donation", tableName: NAME_STRING, comment: "")
 				cell.textLabel?.textColor = Define.ColorBlack
+				cell.textLabel?.font = UIFont.systemFont(ofSize: SIZE_FONT_L)
 				cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
 			default: break
 			}
@@ -122,14 +129,23 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 			switch indexPath.row {
 			case CELL_MYSELF.WEB.rawValue:
 				cell.indentationLevel = 1
-				cell.textLabel?.text = "WEB"
+				cell.textLabel?.text = NSLocalizedString("web", tableName: NAME_STRING, comment: "")
 				cell.textLabel?.textColor = Define.ColorBlack
+				cell.textLabel?.font = UIFont.systemFont(ofSize: SIZE_FONT_L)
 				cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
 			case CELL_MYSELF.APP.rawValue:
 				cell.indentationLevel = 1
-				cell.textLabel?.text = "APP"
+				cell.textLabel?.text = NSLocalizedString("app", tableName: NAME_STRING, comment: "")
 				cell.textLabel?.textColor = Define.ColorBlack
+				cell.textLabel?.font = UIFont.systemFont(ofSize: SIZE_FONT_L)
 				cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+			case CELL_MYSELF.COPYRIGHT.rawValue:
+				cell.textLabel?.numberOfLines = 0
+				cell.textLabel?.textAlignment = .right
+				cell.textLabel?.text = "Copyright (c) 2018 SYOTA TSUDA\nReleased under the MIT license"
+				cell.textLabel?.textColor = Define.ColorBlack
+				cell.textLabel?.font = UIFont.systemFont(ofSize: SIZE_FONT_S)
+				cell.selectionStyle = UITableViewCellSelectionStyle.none
 			default: break
 			}
 		default: break
@@ -145,12 +161,11 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 		switch indexPath.section {
 		case KEY_SECTION.THANK.rawValue:
 			switch indexPath.row {
-			case CELL_THANK.REVIEW.rawValue:
-				// TODO: review
-				let url = URL(string: "itms-apps://itunes.apple.com/us/artist/soilworks/id967143105")
-				UIApplication.shared.open(url!)
-			case CELL_THANK.DONATION.rawValue: break
-				// TODO: donation
+			case CELL_THANK.DONATION.rawValue:
+				let url = URL(string: "http://amzn.asia/2UMEnZ3")
+				if UIApplication.shared.canOpenURL(url!) {
+					UIApplication.shared.open(url!)
+				}
 			default: break
 			}
 		case KEY_SECTION.MYSELF.rawValue:

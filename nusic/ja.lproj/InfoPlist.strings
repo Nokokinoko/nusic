@@ -1,4 +1,7 @@
 "version" = "バージョン";
 "thank" = "謝辞";
-"description" = "Thank you for using";
+"description" = "ご利用ありがとうございます。\n勉強がてら作ったアプリなのでクソ設計＆ミニマム仕様です。";
+"donation" = "感謝の気持ちはこちら";
+"web" = "Webサイトを見る";
+"app" = "他のアプリを見る";
 "NSAppleMusicUsageDescription" = "音楽の再生";

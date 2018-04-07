@@ -1,4 +1,7 @@
 "version" = "version";
 "thank" = "thank";
 "description" = "Thank you for using";
+"donation" = "Donation";
+"web" = "Go to web site";
+"app" = "Go to other apps";
 "NSAppleMusicUsageDescription" = "Play Music";

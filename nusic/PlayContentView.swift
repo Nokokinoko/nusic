@@ -106,24 +106,32 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 			
 			_Player.shuffleMode = Singleton.sharedInstance.getPlayShuffle() ? .songs : .default
 			_Player.play()
+			_CtrlPlay.setImage(Define.ImagePause, for: .normal)
 		}
 	}
 	
+	private func isPlaying() -> Bool {
+		return AVAudioSession.sharedInstance().isOtherAudioPlaying
+	}
+	
 	private func resetCtrlPlay() {
-		switch _Player.playbackState {
-		case .playing:	_CtrlPlay.setImage(Define.ImagePlay, for: .normal)
-		case .paused:	_CtrlPlay.setImage(Define.ImagePause, for: .normal)
-		default: break
+		if isPlaying() {
+			_CtrlPlay.setImage(Define.ImagePause, for: .normal)
+		}
+		else {
+			_CtrlPlay.setImage(Define.ImagePlay, for: .normal)
 		}
 	}
 	
 	@objc func touchPlay() {
-		switch _Player.playbackState {
-		case .playing:	_Player.pause()
-		case .paused:	_Player.play()
-		default: break
+		if isPlaying() {
+			_Player.pause()
+			_CtrlPlay.setImage(Define.ImagePlay, for: .normal)
 		}
-		resetCtrlPlay()
+		else {
+			_Player.play()
+			_CtrlPlay.setImage(Define.ImagePause, for: .normal)
+		}
 	}
 	
 	@objc func touchNext() {
