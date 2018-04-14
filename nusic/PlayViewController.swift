@@ -10,34 +10,49 @@ import UIKit
 
 class PlayViewController: UIViewController {
 	
-	private var _Touch: Bool = false
 	private var _Dismiss: Bool = false
 	open var isReserve: Bool = false
 	
 	private var _Blur: UIVisualEffectView!
-	private var _View: PlayContentView!
+	private var _Play: PlayContentView!
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		_Touch = false
 		_Dismiss = false
+		
+		// Tap
+		let tap: UITapGestureRecognizer = UITapGestureRecognizer(
+			target: self,
+			action: #selector(PlayViewController.gestureTap(sender:))
+		)
+		tap.numberOfTapsRequired = 1
+		self.view.addGestureRecognizer(tap)
+		
+		// Swipe Down
+		let swipe: UISwipeGestureRecognizer = UISwipeGestureRecognizer(
+			target: self,
+			action: #selector(PlayViewController.gestureSwipeDown(sender:))
+		)
+		swipe.numberOfTouchesRequired = 1
+		swipe.direction = .down
+		self.view.addGestureRecognizer(swipe)
 		
 		_Blur = UIVisualEffectView(effect: UIBlurEffect(style: UIBlurEffectStyle.dark))
 		_Blur.frame = self.view.frame
 		_Blur.alpha = 0.0
 		self.view.addSubview(_Blur)
 		
-		_View = PlayContentView(frame: CGRect(x: 0, y: 0, width: 300, height: 400))
-		_View.center = _Blur.center
-		_Blur.addSubview(_View)
+		_Play = PlayContentView(frame: CGRect(x: 0, y: 0, width: 300, height: 400))
+		_Play.center = _Blur.center
+		_Blur.addSubview(_Play)
 		
 		if isReserve {
-			_View.play()
+			_Play.play()
 			isReserve = false
 		}
 		else {
-			_View.setPlayingItem(item: Singleton.sharedInstance.getPlayItem()!)
+			_Play.setPlayingItem(item: Singleton.sharedInstance.getPlayItem()!)
 		}
 	}
 	
@@ -48,43 +63,52 @@ class PlayViewController: UIViewController {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		
-		_View.resetAll()
+		_Play.resetAll()
 		UIView.animate(
 			withDuration: 0.25,
 			animations: { self._Blur.alpha = 1.0 }
 		)
 	}
 	
-	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-		let point = touches.first?.location(in: self.view)
-		if !_View.frame.contains(point!) {
-			_Touch = true
+	@objc func gestureTap(sender: UITapGestureRecognizer) {
+		if sender.state == .ended {
+			if _Dismiss {
+				return
+			}
+			
+			let point = sender.location(in: self.view)
+			if !_Play.frame.contains(point) {
+				_Dismiss = true
+				
+				let parent = presentingViewController as! TabViewController
+				parent.updateTab()
+				
+				UIView.animate(
+					withDuration: 0.25,
+					animations: { self._Blur.alpha = 0.0 },
+					completion: { _ in self.dismiss(animated: false, completion: nil) }
+				)
+			}
 		}
 	}
 	
-	override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-		if !_Touch {
-			return
-		}
-		_Touch = false
-		
+	@objc func gestureSwipeDown(sender: UISwipeGestureRecognizer) {
 		if _Dismiss {
 			return
 		}
+		_Dismiss = true
 		
-		let point = touches.first?.location(in: self.view)
-		if !_View.frame.contains(point!) {
-			_Dismiss = true
-			
-			let parent = presentingViewController as! TabViewController
-			parent.updateTab()
-			
-			UIView.animate(
-				withDuration: 0.25,
-				animations: { self._Blur.alpha = 0.0 },
-				completion: { _ in self.dismiss(animated: false, completion: nil) }
-			)
-		}
+		let parent = presentingViewController as! TabViewController
+		parent.updateTab()
+		
+		UIView.animate(
+			withDuration: 0.25,
+			animations: {
+				self._Blur.alpha = 0.0
+				self._Play.center.y += 100.0
+			},
+			completion: { _ in self.dismiss(animated: false, completion: nil) }
+		)
 	}
 	
 }
