@@ -14,6 +14,8 @@ struct Define {
 	static let ColorBlue: UIColor = UIColor(red: 0.31, green: 0.63, blue: 0.84, alpha: 1.0) // #4EA1D5
 	static let ColorPink: UIColor = UIColor(red: 0.91, green: 0.35, blue: 0.44, alpha: 1.0) // #E85A70
 	
+	static let NameLocalizedString: String = "InfoPlist"
+	
 	static let NoImage: UIImage = UIImage(named: "NoImage")!
 	
 	static let ImagePlay: UIImage = UIImage(named: "CtrlPlay")!

@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: Define.ColorPink]
 		
 		self.window = UIWindow(frame: UIScreen.main.bounds)
-		self.window?.rootViewController = TabViewController()
+		self.window?.rootViewController = SplashViewController()
 		self.window?.makeKeyAndVisible()
 		
 		return true

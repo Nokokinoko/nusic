@@ -5,3 +5,4 @@
 "web" = "Webサイトを見る";
 "app" = "他のアプリを見る";
 "NSAppleMusicUsageDescription" = "音楽の再生";
+"alert" = "nusicを利用するにはメディアライブラリへのアクセスが必要です。";

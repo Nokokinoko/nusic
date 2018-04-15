@@ -10,7 +10,6 @@ import UIKit
 
 class MoreViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 	
-	private let NAME_STRING: String = "InfoPlist"
 	private let SIZE_HEIGHT_CELL: CGFloat = 60
 	private let SIZE_FONT_L: CGFloat = 16
 	private let SIZE_FONT_S: CGFloat = 12
@@ -23,8 +22,8 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 		case MYSELF = 2
 	}
 	private let _Section: [String] = [
-		NSLocalizedString("version", tableName: "InfoPlist", comment: ""),
-		NSLocalizedString("thank", tableName: "InfoPlist", comment: ""),
+		NSLocalizedString("version", tableName: Define.NameLocalizedString, comment: ""),
+		NSLocalizedString("thank", tableName: Define.NameLocalizedString, comment: ""),
 		"Created by SYOTA TSUDA"
 	]
 	
@@ -113,13 +112,13 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 			case CELL_THANK.DESCRIPTION.rawValue:
 				cell.textLabel?.numberOfLines = 0
 				cell.textLabel?.lineBreakMode = NSLineBreakMode.byCharWrapping
-				cell.textLabel?.text = NSLocalizedString("description", tableName: NAME_STRING, comment: "")
+				cell.textLabel?.text = NSLocalizedString("description", tableName: Define.NameLocalizedString, comment: "")
 				cell.textLabel?.textColor = Define.ColorBlack
 				cell.textLabel?.font = UIFont.systemFont(ofSize: SIZE_FONT_S)
 				cell.selectionStyle = UITableViewCellSelectionStyle.none
 			case CELL_THANK.DONATION.rawValue:
 				cell.indentationLevel = 1
-				cell.textLabel?.text = NSLocalizedString("donation", tableName: NAME_STRING, comment: "")
+				cell.textLabel?.text = NSLocalizedString("donation", tableName: Define.NameLocalizedString, comment: "")
 				cell.textLabel?.textColor = Define.ColorBlack
 				cell.textLabel?.font = UIFont.systemFont(ofSize: SIZE_FONT_L)
 				cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
@@ -129,13 +128,13 @@ class MoreViewController: UIViewController, UITableViewDelegate, UITableViewData
 			switch indexPath.row {
 			case CELL_MYSELF.WEB.rawValue:
 				cell.indentationLevel = 1
-				cell.textLabel?.text = NSLocalizedString("web", tableName: NAME_STRING, comment: "")
+				cell.textLabel?.text = NSLocalizedString("web", tableName: Define.NameLocalizedString, comment: "")
 				cell.textLabel?.textColor = Define.ColorBlack
 				cell.textLabel?.font = UIFont.systemFont(ofSize: SIZE_FONT_L)
 				cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
 			case CELL_MYSELF.APP.rawValue:
 				cell.indentationLevel = 1
-				cell.textLabel?.text = NSLocalizedString("app", tableName: NAME_STRING, comment: "")
+				cell.textLabel?.text = NSLocalizedString("app", tableName: Define.NameLocalizedString, comment: "")
 				cell.textLabel?.textColor = Define.ColorBlack
 				cell.textLabel?.font = UIFont.systemFont(ofSize: SIZE_FONT_L)
 				cell.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
