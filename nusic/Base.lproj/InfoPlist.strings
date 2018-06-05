@@ -6,3 +6,4 @@
 "app" = "Go to other apps";
 "NSAppleMusicUsageDescription" = "Play Music";
 "alert" = "Access to the media library is necessary to use nusic.";
+"done" = "Done";

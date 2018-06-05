@@ -16,15 +16,23 @@ struct Define {
 	
 	static let NameLocalizedString: String = "InfoPlist"
 	
+	static let KeyIsTimer: String = "IsTimer"
+	static let KeySettingTimer: String = "SettingTimer"
+	
 	static let NoImage: UIImage = UIImage(named: "NoImage")!
 	
 	static let ImagePlay: UIImage = UIImage(named: "CtrlPlay")!
 	static let ImagePause: UIImage = UIImage(named: "CtrlPause")!
 	static let ImageNext: UIImage = UIImage(named: "CtrlNext")!
 	static let ImagePrev: UIImage = UIImage(named: "CtrlPrev")!
+	
+	static let ImageShuffleOn: UIImage = UIImage(named: "CtrlShuffleOn")!
+	static let ImageShuffleOff: UIImage = UIImage(named: "CtrlShuffleOff")!
+	
 	static let ImageRepeatOn: UIImage = UIImage(named: "CtrlRepeatOn")!
 	static let ImageRepeatOne: UIImage = UIImage(named: "CtrlRepeatOne")!
 	static let ImageRepeatOff: UIImage = UIImage(named: "CtrlRepeatOff")!
-	static let ImageShuffleOn: UIImage = UIImage(named: "CtrlShuffleOn")!
-	static let ImageShuffleOff: UIImage = UIImage(named: "CtrlShuffleOff")!
+	
+	static let ImageTimerOn: UIImage = UIImage(named: "CtrlTimerOn")!
+	static let ImageTimerOff: UIImage = UIImage(named: "CtrlTimerOff")!
 }
