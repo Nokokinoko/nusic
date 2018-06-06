@@ -43,9 +43,17 @@ class PlayViewController: UIViewController {
 		_Blur.alpha = 0.0
 		self.view.addSubview(_Blur)
 		
-		_Play = PlayContentView(frame: CGRect(x: 0, y: 0, width: 300, height: 400))
+		_Play = PlayContentView(frame: CGRect(x: 0, y: 0, width: 300, height: 450))
 		_Play.center = _Blur.center
 		_Blur.addSubview(_Play)
+	}
+	
+	override func didReceiveMemoryWarning() {
+		super.didReceiveMemoryWarning()
+	}
+	
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
 		
 		if isReserve {
 			_Play.play()
@@ -54,16 +62,12 @@ class PlayViewController: UIViewController {
 		else {
 			_Play.setPlayingItem(item: Singleton.sharedInstance.getPlayItem()!)
 		}
-	}
-	
-	override func didReceiveMemoryWarning() {
-		super.didReceiveMemoryWarning()
+		_Play.resetAll()
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 		
-		_Play.resetAll()
 		UIView.animate(
 			withDuration: 0.25,
 			animations: { self._Blur.alpha = 1.0 }

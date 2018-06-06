@@ -13,35 +13,12 @@ final class Singleton {
 	
 	static let sharedInstance = Singleton()
 	
-	private var _Player: MPMusicPlayerController = MPMusicPlayerController.systemMusicPlayer()
 	private var _PlayQuery: MPMediaQuery!
 	private var _PlayItem: MPMediaItem!
 	private var _PlayShuffle: Bool = false
 	private var _OffTimer: Int = 0
 	
 	private init() {}
-	
-	// Player
-	public func getPlayer() -> MPMusicPlayerController {
-		return _Player
-	}
-	
-	public func changePlayerShuffle() {
-		switch _Player.shuffleMode {
-		case .off:		_Player.shuffleMode = .songs
-		case .songs:	_Player.shuffleMode = .off
-		default: break
-		}
-	}
-	
-	public func changePlayerRepeat() {
-		switch _Player.repeatMode {
-		case .none:	_Player.repeatMode = .all
-		case .all:	_Player.repeatMode = .one
-		case .one:	_Player.repeatMode = .none
-		default: break
-		}
-	}
 	
 	// Query
 	public func setPlayQuery(query: MPMediaQuery) {

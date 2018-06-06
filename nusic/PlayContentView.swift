@@ -11,6 +11,8 @@ import MediaPlayer
 
 class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 	
+	private var _Player: MPMusicPlayerController!
+	
 	@IBOutlet weak var _Artwork: UIImageView!
 	
 	@IBOutlet weak var _LabelSong: UILabel!
@@ -47,6 +49,8 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 		viewPlay.frame = self.bounds
 		addSubview(viewPlay)
 		
+		_Player = MPMusicPlayerController.systemMusicPlayer()
+		
 		_CtrlPlay.addTarget(self, action: #selector(PlayContentView.touchPlay), for: .touchUpInside)
 		_CtrlNext.addTarget(self, action: #selector(PlayContentView.touchNext), for: .touchUpInside)
 		_CtrlPrev.addTarget(self, action: #selector(PlayContentView.touchPrev), for: .touchUpInside)
@@ -55,9 +59,13 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 		_CtrlRepeat.addTarget(self, action: #selector(PlayContentView.touchRepeat), for: .touchUpInside)
 		_CtrlTimer.addTarget(self, action: #selector(PlayContentView.touchTimer), for: .touchUpInside)
 		
-		let buttonLongPress = UILongPressGestureRecognizer(target: self, action: #selector(PlayContentView.longPressTimer(sender:)))
-		buttonLongPress.minimumPressDuration = 2.0
-		buttonLongPress.allowableMovement = 20
+		let buttonLongPress: UILongPressGestureRecognizer = UILongPressGestureRecognizer(
+			target: self,
+			action: #selector(PlayContentView.longPressTimer(sender:))
+		)
+		buttonLongPress.numberOfTapsRequired = 0
+		buttonLongPress.minimumPressDuration = 1.0
+		buttonLongPress.allowableMovement = 200
 		_CtrlTimer.addGestureRecognizer(buttonLongPress)
 		
 		let notification = NotificationCenter.default
@@ -65,15 +73,15 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 			self,
 			selector: #selector(PlayContentView.changeItem),
 			name: .MPMusicPlayerControllerPlaybackStateDidChange,
-			object: Singleton.sharedInstance.getPlayer()
+			object: _Player
 		)
 		notification.addObserver(
 			self,
 			selector: #selector(PlayContentView.changeItem),
 			name: .MPMusicPlayerControllerNowPlayingItemDidChange,
-			object: Singleton.sharedInstance.getPlayer()
+			object: _Player
 		)
-		Singleton.sharedInstance.getPlayer().beginGeneratingPlaybackNotifications()
+		_Player.beginGeneratingPlaybackNotifications()
 		
 		let cmd = MPRemoteCommandCenter.shared()
 		cmd.playCommand.addTarget(self, action: #selector(PlayContentView.touchPlay))
@@ -94,12 +102,12 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 		notification.removeObserver(
 			self,
 			name: .MPMusicPlayerControllerPlaybackStateDidChange,
-			object: Singleton.sharedInstance.getPlayer()
+			object: _Player
 		)
 		notification.removeObserver(
 			self,
 			name: .MPMusicPlayerControllerNowPlayingItemDidChange,
-			object: Singleton.sharedInstance.getPlayer()
+			object: _Player
 		)
 		_Player.endGeneratingPlaybackNotifications()
 	}
@@ -126,13 +134,13 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 	// Play
 	public func play() {
 		if let query = Singleton.sharedInstance.getPlayQuery() {
-			Singleton.sharedInstance.getPlayer().setQueue(with: query)
+			_Player.setQueue(with: query)
 			if Singleton.sharedInstance.isSetPlayItem() {
-				Singleton.sharedInstance.getPlayer().nowPlayingItem = Singleton.sharedInstance.getPlayItem()
+				_Player.nowPlayingItem = Singleton.sharedInstance.getPlayItem()
 			}
 			
-			Singleton.sharedInstance.getPlayer().shuffleMode = Singleton.sharedInstance.getPlayShuffle() ? .songs : .default
-			Singleton.sharedInstance.getPlayer().play()
+			_Player.shuffleMode = Singleton.sharedInstance.getPlayShuffle() ? .songs : .default
+			_Player.play()
 			_CtrlPlay.setImage(Define.ImagePause, for: .normal)
 		}
 	}
@@ -155,37 +163,37 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 			stopPlay()
 		}
 		else {
-			Singleton.sharedInstance.getPlayer().play()
+			_Player.play()
 			_CtrlPlay.setImage(Define.ImagePause, for: .normal)
 		}
 	}
 	
 	private func stopPlay() {
-		Singleton.sharedInstance.getPlayer().pause()
+		_Player.pause()
 		_CtrlPlay.setImage(Define.ImagePlay, for: .normal)
 	}
 	
 	// ---------------------------------------------------------------------------
 	// Next
 	@objc func touchNext() {
-		Singleton.sharedInstance.getPlayer().skipToNextItem()
+		_Player.skipToNextItem()
 	}
 	
 	// ---------------------------------------------------------------------------
 	// Prev
 	@objc func touchPrev() {
-		if 3 < Singleton.sharedInstance.getPlayer().currentPlaybackTime {
-			Singleton.sharedInstance.getPlayer().skipToBeginning()
+		if 3 < _Player.currentPlaybackTime {
+			_Player.skipToBeginning()
 		}
 		else {
-			Singleton.sharedInstance.getPlayer().skipToPreviousItem()
+			_Player.skipToPreviousItem()
 		}
 	}
 	
 	// ---------------------------------------------------------------------------
 	// Shuffle
 	private func resetCtrlShuffle() {
-		switch Singleton.sharedInstance.getPlayer().shuffleMode {
+		switch _Player.shuffleMode {
 		case .off:
 			_CtrlShuffle.setImage(Define.ImageShuffleOff, for: .normal)
 			_LabelShuffle.text = "Shuffle OFF";
@@ -199,14 +207,18 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 	}
 	
 	@objc func touchShuffle() {
-		Singleton.sharedInstance.changePlayerShuffle()
+		switch _Player.shuffleMode {
+		case .off:		_Player.shuffleMode = .songs
+		case .songs:	_Player.shuffleMode = .off
+		default: break
+		}
 		resetCtrlShuffle()
 	}
 	
 	// ---------------------------------------------------------------------------
 	// Repeat
 	private func resetCtrlRepeat() {
-		switch Singleton.sharedInstance.getPlayer().repeatMode {
+		switch _Player.repeatMode {
 		case .none:
 			_CtrlRepeat.setImage(Define.ImageRepeatOff, for: .normal)
 			_LabelRepeat.text = "Repeat OFF"
@@ -224,7 +236,12 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 	}
 	
 	@objc func touchRepeat() {
-		Singleton.sharedInstance.changePlayerRepeat()
+		switch _Player.repeatMode {
+		case .none:	_Player.repeatMode = .all
+		case .all:	_Player.repeatMode = .one
+		case .one:	_Player.repeatMode = .none
+		default: break
+		}
 		resetCtrlRepeat()
 	}
 	
@@ -271,8 +288,10 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 	}
 	
 	@objc func longPressTimer(sender: UILongPressGestureRecognizer) {
-		_SelectingSettingTimer = Singleton.sharedInstance.getSettingTimer()
-		becomeFirstResponder()
+		if sender.state == .began {
+			_SelectingSettingTimer = Singleton.sharedInstance.getSettingTimer()
+			becomeFirstResponder()
+		}
 	}
 	
 	override var inputView: UIView? {
@@ -303,6 +322,7 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 	
 	@objc func doneTimer(sender: UIButton) {
 		Singleton.sharedInstance.setSettingTimer(setting: _SelectingSettingTimer)
+		resetCtrlTimer()
 		resignFirstResponder()
 	}
 	
@@ -315,7 +335,7 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 	}
 	
 	@objc func changeItem(notification: Notification) {
-		if let item = Singleton.sharedInstance.getPlayer().nowPlayingItem {
+		if let item = _Player.nowPlayingItem {
 			Singleton.sharedInstance.setPlayItem(item: item)
 			setPlayingItem(item: item)
 		}
@@ -346,7 +366,7 @@ class PlayContentView: UIView, MPMediaPickerControllerDelegate {
 		
 		info?[MPNowPlayingInfoPropertyPlaybackRate] = 1.0
 		info?[MPMediaItemPropertyPlaybackDuration] = item.playbackDuration
-		info?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = Singleton.sharedInstance.getPlayer().currentPlaybackTime
+		info?[MPNowPlayingInfoPropertyElapsedPlaybackTime] = _Player.currentPlaybackTime
 	}
 
 }

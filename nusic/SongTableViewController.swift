@@ -12,18 +12,18 @@ import MediaPlayer
 class SongTableViewController: AbstractTableVC {
 	
 	private enum CALL_FROM {
-		case NONE
 		case PLAY_LIST
 		case ARTIST
 		case ALBUM
+		case SONG
 	}
-	private var _CallFrom: CALL_FROM = CALL_FROM.NONE
+	private var _CallFrom: CALL_FROM = CALL_FROM.SONG
 	private var _PersistentID: MPMediaEntityPersistentID = 0 // UInt64
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		_HaveBack = (_CallFrom != CALL_FROM.NONE)
+		_HaveBack = (_CallFrom != CALL_FROM.SONG)
 		resetBtnLeft()
 	}
 	
@@ -87,7 +87,7 @@ class SongTableViewController: AbstractTableVC {
 	}
 	
 	override func haveSection() -> Bool {
-		return _CallFrom == CALL_FROM.NONE
+		return _CallFrom == CALL_FROM.SONG
 	}
 	
 	// セクション数
@@ -148,6 +148,7 @@ class SongTableViewController: AbstractTableVC {
 			}
 		}
 		else {
+			// Play Shuffle
 			cell.imageView?.image = Define.ImageShuffleOn
 			cell.textLabel?.text = "Play Shuffle"
 			cell.detailTextLabel?.text = nil
@@ -170,6 +171,7 @@ class SongTableViewController: AbstractTableVC {
 			}
 		}
 		else {
+			// Play Shuffle
 			Singleton.sharedInstance.setPlayQuery(query: getMediaQuery())
 			Singleton.sharedInstance.setPlayItem(item: nil)
 			Singleton.sharedInstance.setPlayShuffle(shuffle: true)
