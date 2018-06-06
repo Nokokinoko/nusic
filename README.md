@@ -11,7 +11,7 @@ Prepare shuffle mode for each, also support background playback and control from
 Off timer function added, time can be set (0.5H-3.0H) from button long press.  
 Measure continues even in the background, music stopped automatically.  
 <br />
-切タイマー機能を追加し、ボタン長押しから時間設定が可能(0.5H-3.0H)  
+切タイマー機能を追加し、ボタン長押しから時間設定が可能 (0.5H-3.0H)  
 バックグラウンドでも計測し続け、自動で音楽停止
 
 # Fairy's mischief
